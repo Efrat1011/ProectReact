@@ -1,36 +1,42 @@
-
-import React from "react";
-import { useEnroll } from "../context/EnrollContext";
+import React, { useEffect, useState } from "react";
 
 const MyCourses = () => {
-  const { enrolledCourses, dispatch } = useEnroll();
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
 
-  const handleUnenroll = (id) => {
-    dispatch({ type: "UNENROLL", id });
+  useEffect(() => {
+    const savedCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+    setEnrolledCourses(savedCourses);
+  }, []);
+
+  const handleRemove = (id) => {
+    const updatedCourses = enrolledCourses.filter(course => course.id !== id);
+    setEnrolledCourses(updatedCourses);
+    localStorage.setItem("enrolledCourses", JSON.stringify(updatedCourses));
   };
 
   return (
-    <section className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Менің курстарым</h2>
+    <section>
+      <h2 className="text-2xl font-semibold mb-4">Менің курстарым</h2>
+
       {enrolledCourses.length > 0 ? (
-        <ul className="space-y-3">
+        <ul className="space-y-4">
           {enrolledCourses.map((course) => (
             <li
               key={course.id}
-              className="p-3 bg-green-100 rounded flex justify-between items-center"
+              className="p-4 bg-white shadow rounded flex justify-between items-center"
             >
               <span>{course.title}</span>
               <button
-                onClick={() => handleUnenroll(course.id)}
+                onClick={() => handleRemove(course.id)}
                 className="bg-red-500 text-white px-3 py-1 rounded"
               >
-                Бас тарту
+                Өшіру
               </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p>Сіз әлі ешқандай курсқа тіркелген жоқсыз.</p>
+        <p>Сіз тіркелген курстар жоқ.</p>
       )}
     </section>
   );

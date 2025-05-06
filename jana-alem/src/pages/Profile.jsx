@@ -1,24 +1,153 @@
-import React, { useContext } from "react";
-import CourseContext from "../context/CourseContext";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Навигация үшін
 
 const Profile = () => {
-  const { state } = useContext(CourseContext);
+  const [username, setUsername] = useState(""); // Қолданушы аты
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Қолданушының кірген-кірмегенін тексеру
+  const [isRegistering, setIsRegistering] = useState(false); // Тіркелу мен кіріс арасындағы айырмашылықты анықтау
+  const [errorMessage, setErrorMessage] = useState(""); // Қате хабарламасы
 
+  const navigate = useNavigate(); // Навигация
+
+  // Қолданушының деректерін localStorage-тан алу
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // Тіркелу формасын өңдеу
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (username.trim()) {
+      localStorage.setItem("username", username);
+      setIsLoggedIn(true);
+      setErrorMessage("");
+      navigate("/my-courses"); // Тіркелгеннен кейін "Менің курстарым" бетіне өтеміз
+    } else {
+      setErrorMessage("Атыңызды енгізіңіз.");
+    }
+  };
+
+  // Кіру формасын өңдеу
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername === username) {
+      setIsLoggedIn(true);
+      setErrorMessage("");
+      navigate("/my-courses"); // Кірудан кейін "Менің курстарым" бетіне өтеміз
+    } else {
+      setErrorMessage("Қолданушы аты дұрыс емес.");
+    }
+  };
+
+  // Шығу функциясы
+  const handleLogout = () => {
+    localStorage.clear();
+    setIsLoggedIn(false);
+    navigate("/"); // Басты бетке көшу
+  };
+
+  // Кіру немесе тіркелу формасы
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-10 flex flex-col items-center">
+        <h1 className="text-3xl font-extrabold text-blue-700 mb-6 text-center">
+          Профильге кіріңіз
+        </h1>
+        <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
+          {isRegistering ? (
+            <form onSubmit={handleRegister}>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 rounded border border-blue-400 mb-4"
+                placeholder="Аты-жөніңіз"
+              />
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Тіркелу
+              </button>
+              {errorMessage && (
+                <p className="text-red-600 mt-2 text-center">{errorMessage}</p>
+              )}
+            </form>
+          ) : (
+            <form onSubmit={handleLogin}>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 rounded border border-blue-400 mb-4"
+                placeholder="Қолданушы аты"
+              />
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Кіру
+              </button>
+              {errorMessage && (
+                <p className="text-red-600 mt-2 text-center">{errorMessage}</p>
+              )}
+            </form>
+          )}
+          <div className="mt-4 text-center">
+            {isRegistering ? (
+              <p>
+                Алдын ала тіркелдіңіз бе?{" "}
+                <button
+                  onClick={() => setIsRegistering(false)}
+                  className="text-blue-600"
+                >
+                  Кіру
+                </button>
+              </p>
+            ) : (
+              <p>
+                Жаңа пайдаланушысыз ба?{" "}
+                <button
+                  onClick={() => setIsRegistering(true)}
+                  className="text-blue-600"
+                >
+                  Тіркелу
+                </button>
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Кіру немесе тіркелгеннен кейінгі контент
   return (
-    <section>
-      <h2 className="text-2xl font-semibold mb-4">Менің профилім</h2>
-      <p className="text-gray-700 mb-4">Атыңыз: Efrat</p>
-      <h3 className="text-xl font-medium mb-2">Тіркелген курстар:</h3>
-      {state.enrolledCourses.length === 0 ? (
-        <p>Сіз ешқандай курсқа тіркелмегенсіз.</p>
-      ) : (
-        <ul className="list-disc list-inside">
-          {state.enrolledCourses.map((course) => (
-            <li key={course.id}>{course.title}</li>
-          ))}
-        </ul>
-      )}
-    </section>
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-10 flex flex-col items-center">
+      <h1 className="text-3xl font-extrabold text-blue-700 mb-6 text-center">
+        Профиль
+      </h1>
+      <div className="w-full max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <p><strong>Аты:</strong> {username}</p>
+        <button
+          onClick={handleLogout}
+          className="mt-4 bg-red-600 text-white px-6 py-2 rounded-lg"
+        >
+          Шығу
+        </button>
+        <button
+          onClick={() => navigate("/my-courses")}
+          className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg"
+        >
+          Менің курстарым
+        </button>
+      </div>
+    </div>
   );
 };
 

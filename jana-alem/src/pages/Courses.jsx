@@ -6,7 +6,16 @@ const Courses = () => {
   const [selectedCategory, setSelectedCategory] = useState("Барлық курстар");
   const [searchTerm, setSearchTerm] = useState("");
 
-  
+  // Курсты тіркеу
+  const handleEnroll = (course) => {
+    const enrolledCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+    // Курсты тексеріп, қосу
+    if (!enrolledCourses.some((enrolledCourse) => enrolledCourse.id === course.id)) {
+      enrolledCourses.push(course);
+      localStorage.setItem("enrolledCourses", JSON.stringify(enrolledCourses));
+    }
+  };
+
   const filteredCourses = courses.filter((course) => {
     const matchesCategory =
       selectedCategory === "Барлық курстар" ||
@@ -23,7 +32,6 @@ const Courses = () => {
     <section>
       <h2 className="text-2xl font-semibold mb-4">Курстар</h2>
 
-      
       <div className="mb-4">
         <input
           type="text"
@@ -45,7 +53,6 @@ const Courses = () => {
         </select>
       </div>
 
-      
       <ul className="space-y-4">
         {filteredCourses.length > 0 ? (
           filteredCourses.map((course) => (

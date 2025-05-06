@@ -1,5 +1,4 @@
-// context/EnrollContext.jsx
-import { createContext, useContext, useEffect, useReducer } from "react";
+import { createContext, useContext, useReducer } from "react";
 
 const EnrollContext = createContext();
 
@@ -7,16 +6,14 @@ const initialState = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
 
 function reducer(state, action) {
   switch (action.type) {
-    case "ENROLL": {
+    case "ENROLL":
       const updated = [...state, action.course];
       localStorage.setItem("enrolledCourses", JSON.stringify(updated));
       return updated;
-    }
-    case "UNENROLL": {
+    case "UNENROLL":
       const filtered = state.filter((c) => c.id !== action.id);
       localStorage.setItem("enrolledCourses", JSON.stringify(filtered));
       return filtered;
-    }
     default:
       return state;
   }
