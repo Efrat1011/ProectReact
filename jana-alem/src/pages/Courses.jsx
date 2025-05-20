@@ -6,10 +6,10 @@ const Courses = () => {
   const [selectedCategory, setSelectedCategory] = useState("Барлық курстар");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Курсты тіркеу
+ 
   const handleEnroll = (course) => {
     const enrolledCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
-    // Курсты тексеріп, қосу
+   
     if (!enrolledCourses.some((enrolledCourse) => enrolledCourse.id === course.id)) {
       enrolledCourses.push(course);
       localStorage.setItem("enrolledCourses", JSON.stringify(enrolledCourses));
@@ -58,6 +58,7 @@ const Courses = () => {
           filteredCourses.map((course) => (
             <li key={course.id} className="p-4 bg-white shadow rounded flex justify-between items-center">
               <span>{course.title}</span>
+            
               <button
                 onClick={() => handleEnroll(course)}
                 className="bg-[#2D9CDB] text-white px-4 py-1 rounded"

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Навигация үшін
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [username, setUsername] = useState(""); // Қолданушы аты
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Қолданушының кірген-кірмегенін тексеру
-  const [isRegistering, setIsRegistering] = useState(false); // Тіркелу мен кіріс арасындағы айырмашылықты анықтау
-  const [errorMessage, setErrorMessage] = useState(""); // Қате хабарламасы
+  const [username, setUsername] = useState(""); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [isRegistering, setIsRegistering] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState(""); 
 
-  const navigate = useNavigate(); // Навигация
+  const navigate = useNavigate(); 
 
-  // Қолданушының деректерін localStorage-тан алу
+  
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
@@ -18,40 +18,40 @@ const Profile = () => {
     }
   }, []);
 
-  // Тіркелу формасын өңдеу
+ 
   const handleRegister = (e) => {
     e.preventDefault();
     if (username.trim()) {
       localStorage.setItem("username", username);
       setIsLoggedIn(true);
       setErrorMessage("");
-      navigate("/my-courses"); // Тіркелгеннен кейін "Менің курстарым" бетіне өтеміз
+      navigate("/my-courses"); 
     } else {
       setErrorMessage("Атыңызды енгізіңіз.");
     }
   };
 
-  // Кіру формасын өңдеу
+ 
   const handleLogin = (e) => {
     e.preventDefault();
     const storedUsername = localStorage.getItem("username");
     if (storedUsername === username) {
       setIsLoggedIn(true);
       setErrorMessage("");
-      navigate("/my-courses"); // Кірудан кейін "Менің курстарым" бетіне өтеміз
+      navigate("/my-courses"); 
     } else {
       setErrorMessage("Қолданушы аты дұрыс емес.");
     }
   };
 
-  // Шығу функциясы
+
   const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
-    navigate("/"); // Басты бетке көшу
+    navigate("/"); 
   };
 
-  // Кіру немесе тіркелу формасы
+
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-10 flex flex-col items-center">
@@ -126,7 +126,7 @@ const Profile = () => {
     );
   }
 
-  // Кіру немесе тіркелгеннен кейінгі контент
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-10 flex flex-col items-center">
       <h1 className="text-3xl font-extrabold text-blue-700 mb-6 text-center">

@@ -51,7 +51,7 @@ export default function Gemini() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 flex flex-col items-center py-10">
-      <h1 className="text-3xl font-bold text-blue-700 mb-6">Gemini AI</h1>
+      <h1 className="text-3xl font-bold text-blue-700 mb-6">Jana Alem</h1>
       
       <form onSubmit={handleSubmit} className="flex items-center gap-2 mb-6 w-full max-w-xl">
         <input
